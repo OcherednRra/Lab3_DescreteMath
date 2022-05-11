@@ -30,4 +30,3 @@ def floyd(event):
             lab1 = Label(top, text=j, font='arial 20')
             lab1.grid(row=i+1, column=f)
             f += 1
-
