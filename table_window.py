@@ -49,7 +49,7 @@ class TableWindow(Toplevel):
         for i in range(weight):
             for j in range(weight):
                 if self.table[i][i] != '0':
-                    Label(self, text="Error", fg='red').grid(column=1, row=weight+3, columnspan=5)
+                    Label(self, text="Error", fg='red').grid(column=1, row=weight+3, columnspan=10)
                     pass
 
         for i in range(weight):
@@ -111,7 +111,7 @@ class TableWindow(Toplevel):
                 self.entries_list[i].append(Entry(self, width=4))
                 self.entries_list[i][j].grid(row=i+1, column=j+1, sticky=W)
 
-        Button(self, text='Random 🎲', command=lambda: self.create_random_table(weight))\
+        Button(self, text="🎲", font=("Segoe UI", 18), height=1, width=5, command=lambda: self.create_random_table(weight))\
             .grid(column=0, columnspan=5, row=weight+2)
         Button(self, text='Показати граф', width=15, command=self.create_table)\
             .grid(column=5, row=weight+2, columnspan=5)

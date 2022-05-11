@@ -8,7 +8,7 @@ class Lab3(Tk):
     def __init__(self):
         super().__init__()
 
-        self.geometry('780x350')
+        self.geometry('300x150')
         self.resizable(width=False, height=False)
         self.title('Лабораторна робота №3')
 
@@ -16,24 +16,17 @@ class Lab3(Tk):
 
     def main_window(self):
 
-        def but_bind():
-            if len(self.e.get()) == 0:
-                Label(self, text='*задайте спершу кількість вершин графа', fg='red', font='Arial 12',)\
-                    .grid(column=1, row=4, columnspan=2)
-            else:
-                self.open_table_window()
-
         self.about_student_button()
 
-        Label(self, text='Кількість вершин графа  ', font='Arial 14', pady=20, justify=RIGHT).grid(column=1, row=3, sticky=E)
-        self.e = Entry(self, width=5, font='Arial 14')
-        self.e.grid(column=2, row=3, sticky=W)
-        Button(self, text='Задати матрицю ваг', font='Arial 12', bg='lightblue', command=but_bind). grid(column=3, row=3)
+        Label(self, text="Кількість вершин графа: ", justify=LEFT).grid(column=0, row=1, pady=(20, 0), padx=(10, 0), sticky=E)
+        self.e = Entry(self)
+        self.e.grid(column=1, row=1, sticky="e", pady=(20, 0))
+        Button(self, text='Задати матрицю ваг', command=self.open_table_window).grid(column=0, columnspan=2, row=3, pady=(30, 0), padx=(30, 0))
 
     def about_student_button(self):
-        Button(self, width=18, height=1, fg='#d9073d', relief="raised",
-                  text='!  Інформація  !', activebackground='grey',
-                  command=self.open_student_info_window).grid(pady=(10, 20))
+        Button(self, width=16, height=1, fg='#d9073d', relief="raised", font=("Segoe UI", 11, 'bold'),
+                  text='!  Інфо  !', activebackground='grey',
+                  command=self.open_student_info_window).grid(column=0, row=0, padx=(30, 0), columnspan=2, pady=(10, 0))
 
     def open_student_info_window(self):
         student_info_window = StudentInfoWindow(self)
@@ -47,3 +40,4 @@ class Lab3(Tk):
 if __name__ == "__main__":
     app = Lab3()
     app.mainloop()
+5
