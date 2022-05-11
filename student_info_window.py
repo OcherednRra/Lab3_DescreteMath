@@ -3,23 +3,18 @@ import tkinter as tk
 class StudentInfoWindow(tk.Toplevel):
     def __init__(self, parent):
         super().__init__(parent)
-        self.user_interface()
 
-    def user_interface(self):
-        self.fonts()
-        self.window_configuration()
-        self.option_info()
-        self.option_calculation()
-
-    def fonts(self):
         self.normal_font = ("Segoe UI", 9, 'normal')
         self.bold_font = ("Segoe UI", 9, 'bold')
         self.italic_font = ("Segoe UI", 9, 'italic')
 
+        self.window_configuration()
+        self.option_info()
+        self.option_calculation()
+
     def window_configuration(self):
-        self.minsize(350, 184)
-        self.maxsize(350, 184)
-        self.title("Інформація про лабораторну роботу")
+        self.geometry('350x184')
+        self.title("Інформація")
         self['bg'] = 'grey'
 
     def option_info(self):
