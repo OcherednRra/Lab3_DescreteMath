@@ -27,7 +27,7 @@ class Lab3(Tk):
         Button(self, width=16, height=1, fg='#d9073d', relief="raised", font=("Segoe UI", 11, 'bold'),
                   text='!  Інфо  !', activebackground='grey',
                   command=self.open_student_info_window).grid(column=0, row=0, padx=(30, 0), columnspan=2, pady=(10, 0))
-    
+
     def open_student_info_window(self):
         student_info_window = StudentInfoWindow(self)
         student_info_window.grab_set()
