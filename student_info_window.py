@@ -39,14 +39,14 @@ class StudentInfoWindow(tk.Toplevel):
         frame_variant = tk.Frame(self)
         frame_variant.pack(fill=tk.BOTH)
 
-        option_number = f"{(15 + 15%60)%30 + 1}"
+        option_number = f"{1515%10 + 1}"
 
         option = {
             "Розрахунок варіанту лабораторної роботи": self.bold_font,
             "Варіант лабораторної роботи обчислюється за формулою:": self.italic_font,
-            "(N + G%60)%30 + 1,": self.normal_font,
-            "де N - номер групи, G - номер групи": self.italic_font,
-            "Тому номер варіанту = (15 + 15%60)%30 + 1 = "+option_number: self.bold_font,
+            "NZK % 10 + 1,": self.normal_font,
+            "де NZK - номер залікової книжки": self.italic_font,
+            "Тому номер варіанту = 1515%10 + 1 = "+option_number: self.bold_font,
         }
 
         for str_, f in option.items():

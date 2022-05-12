@@ -17,7 +17,7 @@ def algorithm(self, weight, start, end, table):
         used[i] = True
 
         for j in range(weight):
-            if table[i][j] == "0":
+            if table[i][j] == "0" or table[i][j] == "":
                 table[i][j] = inf
 
             if dist[i] + float(table[i][j]) < dist[j]:
@@ -58,7 +58,7 @@ def algorithm(self, weight, start, end, table):
 
     nx.draw_networkx(graph, pos=nx.shell_layout(graph), width=1, font_size=13)
     nx.draw_networkx_edge_labels(graph, pos=nx.shell_layout(graph), edge_labels=edge_labels, label_pos=0.3, font_size=9)
-    nx.draw_networkx_edges(graph, pos=nx.shell_layout(graph), edgelist=result, edge_color='lawngreen')
+    #nx.draw_networkx_edges(graph, pos=nx.shell_layout(graph), edgelist=result, edge_color='lawngreen')
 
     pylab.axis('off')
     pylab.show()
