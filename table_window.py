@@ -2,9 +2,9 @@ from tkinter import *
 import random
 import networkx as nx
 import pylab
-import math
+from math import inf
+import numpy as np
 
-from floyd_warshall_algorithm import algorithm
 
 class TableWindow(Toplevel):
 
@@ -12,75 +12,96 @@ class TableWindow(Toplevel):
         super().__init__()
 
         self.title('Задати матрицю ваг')
-        self.focus_set()
-        self.minsize(400, 400)
+        self.geometry('400x320')
 
         self.weight = int(weight_value.get())
-        self.table_window()
+        self.window()
 
-    def create_table(self):
+    def create_weitghing_matrix(self):
         weight = self.weight
 
+        """ Формирование весовой матрицы """
         table = []
         for i in range(weight):
             table.append([])
             for j in range(weight):
                 table[i].append(self.entries_list[i][j].get())
 
+        # приведение к int/inf
         for i in range(weight):
             for j in range(weight):
-                if table[i][i] != '0':
-                    Label(self, text="Error", fg='red').grid(column=1, row=weight+3, columnspan=10)
-                    pass
-
-        inf = math.inf
-        dist = [inf] * weight
-        dist[0] = 0
-        previous = [None] * weight
-        used = [False] * weight
-        min_dist = 0
-        min_vertex = 1-1
-
-        # Алгоритм Флойда-Уоршилда
-        while min_dist < inf:
-            i = min_vertex
-            used[i] = True
-
-            for j in range(weight):
-                if table[i][j] == "":
+                if table[i][j] == "" or table[i][j] == "0":
                     table[i][j] = inf
-
-                if table[i][j] == "0":
-                    table[i][j] = 0
-
-                if dist[i] + float(table[i][j]) < dist[j]:
-                    dist[j] = dist[i] + float(table[i][j])
-                    previous[j] = i
-
-            min_dist = inf
+                    continue
             for j in range(weight):
-                if not used[j] and dist[j] < min_dist:
-                    min_dist = dist[j]
-                    min_vertex = j
+                if table[i][j] != inf:
+                    table[i][j] = int(table[i][j])
 
-        print(table)
-        path = []
-        j = 7 - 1
+        self.table = table
 
-        while j is not None:
-            path.append(j)
-            j = previous[j]
 
-        print(path)
-        path = path[::-1]
-        result = []
-        for i in range(len(path)-1):
-            result.append((path[i]+1,path[i+1]+1))
+    def shortest_paths_matrix(self):
+        """ Матрица кратчайших путей (алгоритм Флойда-Уоршилда) """
+        table = self.table
 
-        print(path)
-        print(result)
+        N = len(table)                                      # число вершин в графе
+        P = [[v for v in range(N)] for u in range(N)]       # начальный список предыдущих вершин для поиска кратчайших маршрутов
+
+        for k in range(N):
+            for i in range(N):
+                for j in range(N):
+                    d = table[i][k] + table[k][j]
+                    if table[i][j] > d:
+                        table[i][j] = d
+                        P[i][j] = k     # номер промежуточной вершины при движении от i к j
+
+        # нумерацця вершин начинается с нуля
+        for start in range(N):
+            for end in range(N):
+                if start <= end:
+                    path = [end+1]
+                    while end != start:
+                        end = P[end][start]
+                        path.append(end+1)
+
+                    frst = path[0]-1
+                    lst = path[-1]-1
+
+                    epath = []
+                    for k in range(len(path)):
+                        if path[k] == path[-1]:
+                            break
+                        epath.append((path[k], path[k+1]))
+
+                    path = epath
+
+                    s = 0
+                    for (n, m) in path:
+                        s += table[n-1][m-1]
+
+                    if table[frst][lst] != inf:
+                        table[frst][lst] = s
+                        table[lst][frst] = s
+
+        self.table = table
+
+        a = np.array(table)
+
+        for line in a:
+            print ('  '.join(map(str, line)))
+
+
+
+    def show_table(self):
+        self.create_weitghing_matrix()
+        # відключення функції
+        self.create_weitghing_matrix = lambda: None
+
+        weight = self.weight
+        table = self.table
+
         # Візуалізація найкоротшого шляху
-        pylab.figure(f"Найкоротший шлях")
+        pylab.figure("Візуалізація матриці")
 
         graph = nx.Graph()
         for i in range(weight):
@@ -98,35 +119,39 @@ class TableWindow(Toplevel):
 
         nx.draw_networkx(graph, pos=nx.shell_layout(graph), width=1, font_size=13)
         nx.draw_networkx_edge_labels(graph, pos=nx.shell_layout(graph), edge_labels=edge_labels, label_pos=0.3, font_size=9)
-        nx.draw_networkx_edges(graph, pos=nx.shell_layout(graph), edgelist=result, edge_color='lawngreen')
 
         pylab.axis('off')
         pylab.show()
 
-    def table_window(self):
+    def window(self):
         weight = self.weight
+
+        master = Frame(self)
+        master.pack(pady=(10, 0))
+
+        matrix = Frame(master)
+        matrix.grid(row=0)
 
         for i in range(weight + 1):
             for j in range(weight + 1):
-                grids = {"column": j, "row": i, "sticky": W}
+                grids = {"column": j, "row": i, "sticky": W+E+N+S}
                 if i == 0:
-                    Label(self, text='{}'.format(j)).grid(**grids)
+                    Label(matrix, text=j).grid(**grids)
                 elif j == 0:
-                    Label(self, text='{}'.format(i)).grid(**grids)
-                elif i == 0 and j == 0:
-                    Label(self, text=' ').grid(**grids)
+                    Label(matrix, text=i).grid(**grids)
 
         self.entries_list = []
         for i in range(weight):
             self.entries_list.append([])
             for j in range(weight):
-                self.entries_list[i].append(Entry(self, width=4))
-                self.entries_list[i][j].grid(row=i+1, column=j+1, sticky=W)
+                self.entries_list[i].append(Entry(matrix, width=4))
+                self.entries_list[i][j].grid(row=i+1, column=j+1)
 
-        #Button(self, text="🎲", font=("Segoe UI", 18), height=1, width=5, command=lambda: self.create_random_table(weight))\
-        #    .grid(column=0, columnspan=5, row=weight+2, pady=(10, 0))
-        Button(self, text='Показати граф', width=15, command=lambda: self.create_table())\
-            .grid(column=5, row=weight+2, columnspan=5)
+        Button(master, text='Показати граф, заданий матрицею', width=35, command=self.show_table)\
+            .grid(row=weight+4, pady=(30, 0))
 
-    def run_algorithm(self):
-        algorithm(self, self.weight, int(1), int(7), self.table)
+        Button(master, text='Показати матрицю найкоротших шляхів', width=35, command=self.shortest_paths_matrix)\
+            .grid(row=weight+5)
+
+        Button(master, text='Показати граф найкоротших шляхів', width=35, command=self.show_table)\
+            .grid(row=weight+6)

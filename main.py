@@ -21,7 +21,7 @@ class Lab3(Tk):
         Label(self, text="Кількість вершин графа: ", justify=LEFT).grid(column=0, row=1, pady=(20, 0), padx=(10, 0), sticky=E)
         self.e = Entry(self)
         self.e.grid(column=1, row=1, sticky="e", pady=(20, 0))
-        Button(self, text='Задати матрицю ваг', command=self.open_table_window).grid(column=0, columnspan=2, row=3, pady=(30, 0), padx=(30, 0))
+        Button(self, text='Задати матрицю ваг', command=self.open_table_window).grid(column=0, columnspan=2, row=3, pady=(20, 0), padx=(30, 0))
 
     def about_student_button(self):
         Button(self, width=16, height=1, fg='#d9073d', relief="raised", font=("Segoe UI", 11, 'bold'),
