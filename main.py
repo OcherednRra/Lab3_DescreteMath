@@ -8,9 +8,9 @@ class Lab3(Tk):
     def __init__(self):
         super().__init__()
 
-        self.geometry('300x150')
+        self.geometry("300x150")
         self.resizable(width=False, height=False)
-        self.title('Лабораторна робота №3')
+        self.title("Лаб3")
 
         self.main_window()
 
@@ -18,15 +18,17 @@ class Lab3(Tk):
 
         self.about_student_button()
 
-        Label(self, text="Кількість вершин графа: ", justify=LEFT).grid(column=0, row=1, pady=(20, 0), padx=(10, 0), sticky=E)
+        Label(self, text="Кількість вершин графа: ", justify=LEFT)\
+            .grid(column=0, row=1, pady=(20, 0), padx=(10, 0), sticky=E)
         self.e = Entry(self)
         self.e.grid(column=1, row=1, sticky="e", pady=(20, 0))
-        Button(self, text='Задати матрицю ваг', command=self.open_table_window).grid(column=0, columnspan=2, row=3, pady=(20, 0), padx=(30, 0))
+        Button(self, text="Задати матрицю ваг", command=self.open_table_window)\
+            .grid(column=0, columnspan=2, row=3, pady=(30, 0), padx=(30, 0))
 
     def about_student_button(self):
-        Button(self, width=16, height=1, fg='#d9073d', relief="raised", font=("Segoe UI", 11, 'bold'),
-                  text='!  Інфо  !', activebackground='grey',
-                  command=self.open_student_info_window).grid(column=0, row=0, padx=(30, 0), columnspan=2, pady=(10, 0))
+        Button(self, width=16, height=1, fg="#d9073d", text="!  Інфо  !",
+               activebackground="grey", command=self.open_student_info_window)\
+                    .grid(column=0, row=0, padx=(30, 0), columnspan=2, pady=(10, 0))
 
     def open_student_info_window(self):
         student_info_window = StudentInfoWindow(self)

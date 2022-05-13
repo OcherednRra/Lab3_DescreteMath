@@ -1,64 +1,45 @@
-import math
 import pylab
 import networkx as nx
+from math import inf
 
-def algorithm(self, weight, start, end, table):
-    inf = math.inf
-    dist = [inf] * weight
-    dist[start-1] = 0
-    previous = [None] * weight
-    used = [False] * weight
-    min_dist = 0
-    min_vertex = start-1
+def algorithm(table):
+    N = len(table)                                      # число вершин в графе
+    P = [[v for v in range(N)] for u in range(N)]       # начальный список предыдущих вершин для поиска кратчайших маршрутов
 
-    # Алгоритм Флойда-Уоршилда
-    while min_dist < inf:
-        i = min_vertex
-        used[i] = True
+    for k in range(N):
+        for i in range(N):
+            for j in range(N):
+                d = table[i][k] + table[k][j]
+                if table[i][j] > d:
+                    table[i][j] = d
+                    P[i][j] = k     # номер промежуточной вершины при движении от i к j
 
-        for j in range(weight):
-            if table[i][j] == "0" or table[i][j] == "":
-                table[i][j] = inf
+    # нумерацця вершин начинается с нуля
+    for start in range(N):
+        for end in range(N):
+            if start <= end:
+                path = [end+1]
+                while end != start:
+                    end = P[end][start]
+                    path.append(end+1)
 
-            if dist[i] + float(table[i][j]) < dist[j]:
-                dist[j] = dist[i] + float(table[i][j])
-                previous[j] = i
+                frst = path[0]-1
+                lst = path[-1]-1
 
-        min_dist = inf
-        for j in range(weight):
-            if not used[j] and dist[j] < min_dist:
-                min_dist = dist[j]
-                min_vertex = j
+                epath = []
+                for k in range(len(path)):
+                    if path[k] == path[-1]:
+                        break
+                    epath.append((path[k], path[k+1]))
 
-    path = []
-    j = end - 1
+                path = epath
 
-    while j is not None:
-        path.append(j)
-        j = previous[j]
+                s = 0
+                for (n, m) in path:
+                    s += table[n-1][m-1]
 
-    path = path[::-1]
-    result = []
-    for i in range(len(path)-1):
-        result.append((path[i]+1,path[i+1]+1))
+                if table[frst][lst] != inf:
+                    table[frst][lst] = s
+                    table[lst][frst] = s
 
-    # Візуалізація найкоротшого шляху
-    pylab.figure(f"Найкоротший шлях з вершини {start} в вершину {end}")
-
-    graph = nx.Graph()
-    for i in range(weight):
-        graph.add_node(i+1)
-
-    for i in range(len(table)):
-        for j in range(len(table[i])):
-            if table[i][j] != inf:
-                graph.add_edge(i+1, j+1, weight=table[i][j])
-
-    edge_labels = dict([((u, v,), d['weight']) for u, v, d in graph.edges(data=True)])
-
-    nx.draw_networkx(graph, pos=nx.shell_layout(graph), width=1, font_size=13)
-    nx.draw_networkx_edge_labels(graph, pos=nx.shell_layout(graph), edge_labels=edge_labels, label_pos=0.3, font_size=9)
-    #nx.draw_networkx_edges(graph, pos=nx.shell_layout(graph), edgelist=result, edge_color='lawngreen')
-
-    pylab.axis('off')
-    pylab.show()
+    return table
