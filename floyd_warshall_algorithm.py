@@ -3,8 +3,8 @@ import networkx as nx
 from math import inf
 
 def algorithm(table):
-    N = len(table)                                      # число вершин в графе
-    P = [[v for v in range(N)] for u in range(N)]       # начальный список предыдущих вершин для поиска кратчайших маршрутов
+    N = len(table)
+    P = [[v for v in range(N)] for u in range(N)]
 
     for k in range(N):
         for i in range(N):
@@ -12,9 +12,8 @@ def algorithm(table):
                 d = table[i][k] + table[k][j]
                 if table[i][j] > d:
                     table[i][j] = d
-                    P[i][j] = k     # номер промежуточной вершины при движении от i к j
+                    P[i][j] = k
 
-    # нумерацця вершин начинается с нуля
     for start in range(N):
         for end in range(N):
             if start <= end:
